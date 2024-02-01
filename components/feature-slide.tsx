@@ -29,7 +29,7 @@ export default function FeatureSlider() {
       }}
       className="w-full"
     >
-      <CarouselContent className='bg-white p-7'>
+      <CarouselContent className='bg-white p-7 border-b-2'>
         {imgs.map((item, index) => (
           <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/4 pl-1 rounded-sm">
             <Image src={item} alt='...' className='rounded-sm'/>

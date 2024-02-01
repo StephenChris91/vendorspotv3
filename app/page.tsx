@@ -2,6 +2,7 @@ import Image from "next/image";
 import Nav from "@/components/nav";
 import Header from "@/components/header";
 import FeatureSlider from '@/components/feature-slide'
+import ProductDisplay from "@/components/product-display";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       {/* <h1 className="text-4xl text-red-600">Landing Page</h1> */}
     </main>
     <FeatureSlider />
+    <ProductDisplay />
     </>
   );
 }
