@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProductStatus {
+  PUBLISHED
+  DRAFT
+  SUSPENDED
+  OUTOFSTOCK
+}
+
+enum ProductType {
+  SIMPLE
+  VARIABLE
+}
+
+//Define a product model
+// model Product {
+//   id  Int @id @default(autoincrement())
+//   name  String
+//   slug  String?
+//   description String?
+//   typeId  Int?
+//   price Float
+//   shopId  Int //Link this to the shop model (1-1 relation)
+//   salePrice Int
+//   language  String
+//   minPrice  Float
+//   maxPrice  Float
+//   sku Int @id @unique @default(autoincrement())
+//   quantity  Int
+//   inStock Boolean
+//   isTaxable Boolean
+//   shippingClassId Int? @id @unique @default(autoincrement())
+//   status  ProductStatus @default(PUBLISHED)
+//   productType ProductType @default(SIMPLE)
+//   height  Int?
+//   width Int?
+//   image Image //link this to the image model (1 - 1 relations)
+//   video String?
+//   gallery String? //this is an array of the images model, Link it to the Image model
+//   deletedAt DateTime  @default(now())
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @default(now())
+//   authorId String? // this is tentative, you may need to link it to an author model on a 1-1 relation
+//   manufacturerId  String //same as above
+//   isDigital Boolean?
+//   isExternal  Boolean?
+//   externalProductUrl  String?
+//   externalProductButtonNext String?
+//   ratings Float //You may have to consider linking this to a ratings model on a 1-1 relations
+//   totalReviews  Int //same as above
+//   ratingCount Int? //same as above
+//   myReview  String?
+//   inWishlist  Boolean?
+//   categories  String  //this is an array of the category model, link it on a 1-many relation
+//   shop  String  //this has to be linked to the shop model on 1-1 relation
+//   type String //Link this to the productType model on a 1-many relations
+// }
+
+// model Image {
+//   id  String  @id @default(uuid())
+//   original String
+//   thumbnail String
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime @default(now())
+//   product Product @relation(fields:[productId], references: [id])
+//   productId Int
+// }
+
+// model Gallery {
+//   id  String @id @default(uuid())
+//   gallery Image[] @relation(fields: [galleryId], references: [id])
+//   galleryId Int
+// }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  deletedAt DateTime @default(now())
+  shopId    Int
+  shop      Shop     @relation(fields: [shopId], references: [id])
+}
+
+model Shop {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  address     String
+  phone       String
+  email       String
+  logo        String
+  banner      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  deletedAt   DateTime  @default(now())
+  users       User[]
+  products    Product[]
+}
+
+model Product {
+  id                        Int           @id @default(autoincrement())
+  name                      String
+  slug                      String?
+  description               String?
+  typeId                    Int?
+  price                     Float
+  salePrice                 Int
+  language                  String
+  minPrice                  Float
+  maxPrice                  Float
+  sku                       Int           @unique @default(autoincrement())
+  quantity                  Int
+  inStock                   Boolean
+  isTaxable                 Boolean
+  shippingClassId           Int?          @unique @default(autoincrement())
+  status                    ProductStatus @default(PUBLISHED)
+  productType               ProductType   @default(SIMPLE)
+  height                    Int?
+  width                     Int?
+  image                     Image?
+  imageId                   Int
+  video                     String?
+  gallery                   Gallery?
+  galleryId                 Int
+  deletedAt                 DateTime      @default(now())
+  createdAt                 DateTime      @default(now())
+  updatedAt                 DateTime      @default(now())
+  authorId                  String?
+  manufacturerId            String
+  isDigital                 Boolean?
+  isExternal                Boolean?
+  externalProductUrl        String?
+  externalProductButtonNext String?
+  ratings                   Float
+  totalReviews              Int
+  ratingCount               Int?
+  myReview                  String?
+  inWishlist                Boolean?
+  categories                String
+  // shop        Shop     @relation(fields: [shopId], references: [id])
+  shopId                    Int
+  type                      String
+  Shop                      Shop          @relation(fields: [shopId], references: [id])
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  original  String
+  thumbnail String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @unique
+}
+
+model Gallery {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @unique
+}
+
+// model ProductType {
+//   id        Int      @id @default(autoincrement())
+//   name      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+//   deletedAt DateTime @default(now())
+//   products  Product[]
+// }

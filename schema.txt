@@ -1,0 +1,437 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model User {
+//   id          Int          @id @default(autoincrement())
+//   name        String
+//   email       String       @unique
+//   password    String
+//   profile     Profile?
+//   isActive    Boolean
+//   addresses   Address[]
+//   permissions Permission[]
+//   wallet      Wallet?      @relation("user wallet")
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   shopId    Int?
+//   walletId  Int?
+//   Wallet    Wallet[]
+//   // shop      Shop[]
+//   Shop      Shop[]
+//   // Shop      Shop[]
+//   Shop      Shop[]
+// }
+
+// model Profile {
+//   id        Int      @id @default(autoincrement())
+//   userId    Int      @unique
+//   avatar    Image    @relation(fields: [imageId], references: [id])
+//   bio       String?
+//   socials   Social[]
+//   contact   String?
+//   customer  String?
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   user    User   @relation(fields: [userId], references: [id])
+//   imageId Int
+//   Shop    Shop[]
+//   // Shop    Shop[]
+//   Shop    Shop[]
+// }
+
+// model Image {
+//   id        Int       @id @default(autoincrement())
+//   thumbnail String
+//   original  String
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   Profile   Profile[]
+//   Shop      Shop[]
+//   // Shop      Shop[]
+//   // Shop      Shop[]
+//   // Shop      Shop[]
+//   Shop      Shop[]
+//   Shop      Shop[]
+// }
+
+// model Social {
+//   id             Int           @id @default(autoincrement())
+//   type           String
+//   link           String
+//   profileId      Int
+//   shopSettingsId Int?
+//   profile        Profile       @relation(fields: [profileId], references: [id])
+//   shopSettings   ShopSettings? @relation(fields: [shopSettingsId], references: [id])
+// }
+
+// model Address {
+//   id            Int      @id @default(autoincrement())
+//   title         String
+//   default       Boolean
+//   streetAddress String
+//   country       String
+//   city          String
+//   state         String
+//   zip           String
+//   type          String
+//   customerId    Int
+//   createdAt     DateTime @default(now())
+//   updatedAt     DateTime @updatedAt
+
+//   customer User   @relation(fields: [customerId], references: [id])
+//   Shop     Shop[]
+//   // Shop     Shop[]
+//   Shop     Shop[]
+// }
+
+// model Permission {
+//   id        Int      @id @default(autoincrement())
+//   name      String
+//   guardName String
+//   userId    Int
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   user User @relation(fields: [userId], references: [id])
+// }
+
+// model Wallet {
+//   id              Int      @id @default(autoincrement())
+//   adminCommission Float
+//   totalEarnings   Float
+//   withdrawnAmount Float
+//   currentBalance  Float
+//   account         String
+//   name            String
+//   email           String
+//   bank            String
+//   userId          Int
+//   createdAt       DateTime @default(now())
+//   updatedAt       DateTime @updatedAt
+//   wallet          User     @relation("user wallet", fields: [walletId], references: [id])
+//   walletId        Int      @unique
+//   user            User     @relation(fields: [userId], references: [id])
+//   // shop            Shop[]
+//   Shop            Shop[]
+//   Shop            Shop[]
+// }
+
+// model Shop {
+//   id            Int          @id @default(autoincrement())
+//   ownerId       Int
+//   owner         String
+//   staffs        String[]
+//   isActive      Boolean
+//   ordersCount   Int
+//   productsCount Int
+//   balance       Wallet       @relation("ShopBalance", fields: [walletId], references: [id])
+//   name          String
+//   slug          String
+//   description   String
+//   coverImage    Image        @relation("ShopCoverImage", fields: [coverImageId], references: [id])
+//   logo          Image        @relation("ShopLogo", fields: [logoId], references: [id])
+//   address       Address      @relation("ShopAddress", fields: [addressId], references: [id])
+//   settings      ShopSettings @relation("ShopSettings", fields: [shopSettingsId], references: [id])
+//   distance      String?
+//   lat           String
+//   lng           String
+//   createdAt     DateTime     @default(now())
+//   updatedAt     DateTime     @updatedAt
+
+//   ownerProfile   Profile       @relation("ShopOwnerProfile", fields: [ownerId], references: [id])
+//   userId         Int?
+//   walletId       Int
+//   coverImageId   String
+//   logoId         Int
+//   addressId      Int
+//   shopSettingsId Int
+//   profileId      Int?
+//   shop           User          @relation("ShopUser", fields: [shopId], references: [id])
+//   shopId         Int
+//   User           User?         @relation(fields: [userId], references: [id])
+//   ShopSettings   ShopSettings? @relation(fields: [shopSettingsId], references: [id])
+//   Profile        Profile?      @relation(fields: [profileId], references: [id])
+//   Image          Image?        @relation(fields: [imageId], references: [id])
+//   imageId        Int?
+//   wallet         Wallet        @relation(fields: [walletId], references: [id])
+//   Address        Address       @relation(fields: [addressId], references: [id])
+// }
+
+// model ShopSettings {
+//   id        Int      @id @default(autoincrement())
+//   socials   Social[]
+//   contact   String?
+//   location  Location @relation(fields: [locationId], references: [id])
+//   website   String?
+//   shopId    Int      @unique
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   // shop       Shop   @relation(fields: [shopId], references: [id])
+//   locationId Int
+//   Shop       Shop[]
+//   Shop       Shop[]
+// }
+
+// model Location {
+//   id               Int            @id @default(autoincrement())
+//   lat              Float
+//   lng              Float
+//   city             String
+//   state            String
+//   country          String
+//   zip              String
+//   formattedAddress String
+//   createdAt        DateTime       @default(now())
+//   updatedAt        DateTime       @updatedAt
+//   ShopSettings     ShopSettings[]
+// }
+
+enum Role {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+model Product {
+  id                    Int       @id @default(autoincrement())
+  type                  String
+  image                 Image     @relation(fields: [imageId], references: [id])
+  imageId               Int
+  isValid               Boolean
+  amount                Int
+  activeFrom            DateTime
+  expireAt              DateTime
+  language              String
+  translatedLanguages   String[]
+  target                Boolean
+  shopId                Int
+  isApprove             Boolean
+  discount              Int
+  deliveryFee           Int
+  deliveryTime          String
+  products              String[]
+  alteredPaymentGateway String
+  createdAt             DateTime
+  updatedAt             DateTime
+  addressId             Int
+  // addressId             Int
+  paymentIntentId       Int?
+  Address               Address   @relation(fields: [addressId], references: [id])
+  Address               Address[]
+}
+
+model Image {
+  id        Int       @id @default(autoincrement())
+  thumbnail String
+  original  String
+  createdAt DateTime
+  updatedAt DateTime
+  product   Product[]
+  Profile   Profile[]
+}
+
+// model Shop {
+//   id             Int          @id @default(autoincrement())
+//   owner          User         @relation("shopOwner", fields: [ownerId], references: [id])
+//   ownerId        Int
+//   staffs         User[]
+//   isActive       Boolean
+//   ordersCount    Int
+//   productsCount  Int
+//   balance        Balance      @relation(fields: [balanceId], references: [id])
+//   name           String
+//   slug           String
+//   description    String
+//   coverImage     Image        @relation("shopCoverImage", fields: [imageId], references: [id])
+//   logo           Image        @relation(fields: [imageId], references: [id])
+//   address        Address      @relation(fields: [addressId], references: [id])
+//   settings       ShopSettings @relation(fields: [shopSettingsId], references: [id])
+//   distance       String
+//   lat            String
+//   lng            String
+//   createdAt      DateTime
+//   updatedAt      DateTime
+//   Product        Product[]
+//   balanceId      Int
+//   imageId        Int
+//   // imageId        Int
+//   addressId      Int
+//   shopSettingsId Int
+//   User           User[]
+// }
+
+model User {
+  id              Int       @id @default(autoincrement())
+  name            String
+  email           String    @unique
+  password        String
+  role            Role
+  profile         Profile   @relation(fields: [profileId], references: [id])
+  shops           String[]
+  managedShop     String?
+  isActive        Boolean
+  address         Address[]
+  // permissions     Permission[]
+  createdAt       DateTime
+  updatedAt       DateTime
+  // Shop            Shop[]
+  // shop            Shop?     @relation("userShop", fields: [shopId], references: [id])
+  shopId          Int?
+  profileId       Int
+  walletId        Int
+  abusiveReportId Int?
+}
+
+model Profile {
+  id       Int    @id @default(autoincrement())
+  avatar   Image  @relation(fields: [imageId], references: [id])
+  bio      String
+  contact  String
+  customer String
+  User     User[]
+  imageId  Int
+}
+
+// model Social {
+//   id             Int           @id @default(autoincrement())
+//   type           String
+//   link           String
+//   Profile        Profile?      @relation(fields: [profileId], references: [id])
+//   profileId      Int?
+//   ShopSettings   ShopSettings? @relation(fields: [shopSettingsId], references: [id])
+//   shopSettingsId Int?
+// }
+
+model Address {
+  id             Int       @id @default(autoincrement())
+  title          String
+  default        Boolean
+  streetAddress  String
+  country        String
+  city           String
+  state          String
+  zip            String
+  type           String
+  customer       String
+  createdAt      DateTime
+  updatedAt      DateTime
+  // Product       Product[]
+  // Product       Product[]
+  // Shop           Shop[]
+  User           User?     @relation(fields: [userId], references: [id])
+  userId         Int?
+  product        Product[]
+  billingAddress Product   @relation("billingAddress", fields: [productId], references: [id])
+  productId      Int
+}
+
+// model Permission {
+//   id        Int      @id @default(autoincrement())
+//   name      String
+//   guardName String
+//   createdAt DateTime
+//   updatedAt DateTime
+//   User      User?    @relation(fields: [userId], references: [id])
+//   userId    Int?
+// }
+
+// model Wallet {
+//   id   Int    @id @default(autoincrement())
+//   User User[]
+// }
+
+// model Balance {
+//   id                  Int         @id @default(autoincrement())
+//   adminCommissionRate Int
+//   shop                String
+//   totalEarnings       Int
+//   withdrawnAmount     Int
+//   currentBalance      Int
+//   paymentInfo         PaymentInfo @relation(fields: [paymentInfoId], references: [id])
+//   Shop                Shop[]
+//   paymentInfoId       Int
+// }
+
+// model PaymentInfo {
+//   id      Int       @id @default(autoincrement())
+//   account String
+//   name    String
+//   email   String
+//   bank    String
+//   Balance Balance[]
+// }
+
+// model ShopSettings {
+//   id         Int      @id @default(autoincrement())
+//   socials    Social[]
+//   contact    String
+//   location   Location @relation(fields: [locationId], references: [id])
+//   website    String
+//   Shop       Shop[]
+//   locationId Int
+// }
+
+// model Location {
+//   id               Int            @id @default(autoincrement())
+//   lat              Float
+//   lng              Float
+//   city             String
+//   state            String
+//   country          String
+//   zip              String
+//   formattedAddress String
+//   ShopSettings     ShopSettings[]
+// }
+
+// model PaymentIntent {
+//   id                  Int                @id @default(autoincrement())
+//   orderId             Int
+//   trackingNumber      String
+//   paymentGateway      String
+//   paymentIntentInfo   PaymentIntentInfo? @relation(fields: [paymentIntentInfoId], references: [id])
+//   Product             Product[]
+//   paymentIntentInfoId Int?
+// }
+
+// model PaymentIntentInfo {
+//   id            Int             @id @default(autoincrement())
+//   clientSecret  String
+//   redirectUrl   String
+//   paymentId     String
+//   isRedirect    Boolean
+//   PaymentIntent PaymentIntent[]
+// }
+
+// model Feedback {
+//   id        Int      @id @default(autoincrement())
+//   userId    String
+//   modelType String
+//   modelId   String
+//   positive  Boolean
+//   negative  Boolean
+//   createdAt DateTime
+//   updatedAt DateTime
+// }
+
+// model AbusiveReport {
+//   id        Int      @id @default(autoincrement())
+//   userId    Int
+//   user      User[]
+//   modelId   Int
+//   modelType String
+//   message   String
+//   createdAt DateTime
+//   updatedAt DateTime
+// }

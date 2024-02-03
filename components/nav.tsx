@@ -6,29 +6,38 @@ import { Button } from '@/components/ui/button'
 import { RiMapPinLine } from "react-icons/ri";
 import { AlertDialogTrigger, AlertDialog } from '@/components/ui/alert-dialog'
 import LocationSearch from '@/components/location-search'
+import { useRouter } from "next/navigation";
 
 
-const people = ["Shop", "About", "Offers", "Contact"];
+const links = ["shop", "about", "offers", "contact"];
 
-const links = people.map((person, index) => (
-  <li className="px-3 py-2 cursor-pointer rounded hover:bg-sky-100" key={index}>
-    {person}
-  </li>
-));
 
 
 export default function Navbar() {
   
   const [isOpen, setIsOpen] = useState(false);
 
+  // const handleClick = (link: string) => {
+  //   return router.push(link)
+  // }
+  
+  const router = useRouter()
+  
+  const routes = links.map((link, index) => (
+    <li onClick={() => router.push(`/${link}`)} className="px-3 py-2 bg-none shadow-0 text-black cursor-pointer rounded" key={index}>
+      {link}
+    </li>
+  ));
+
+
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
   return (
     <div className="px-20 relative m-auto p-3 flex justify-between items-center">
-      <Image src={Logo} height={30} alt='header logo' />
+      <Image src={Logo} height={30} alt='header logo' onClick={() => router.push('/')} className="cursor-pointer"/>
       <nav className={isOpen ? ("flex") : (" hidden md:flex")}>
-        <ul className="flex bg-transparent absolute md:relative flex-col md:flex-row w-full shadow md:shadow-none text-center top-12 left-0 md:top-0 md:flex">{links}</ul>
+        <ul className="flex bg-transparent absolute md:relative flex-col md:flex-row w-full shadow md:shadow-none text-center top-12 left-0 md:top-0 md:flex">{routes}</ul>
       </nav>
         <div className='flex space-x-3'>
             <div className='border-2 rounded-full p-3 cursor-pointer'>
@@ -38,8 +47,8 @@ export default function Navbar() {
                     </AlertDialogTrigger>
                 </AlertDialog>
             </div>
-            <Button className='rounded-sm p-5 bg-blue-500 hover:bg-blue-600'>Login</Button>
-            <Button className='rounded-sm p-5 bg-green-600 hover:bg-green-700'>Become A Vendor</Button>
+            <Button className='rounded-sm p-5 bg-blue-500 hover:bg-blue-600' onClick={() => router.push('/login')}>Login</Button>
+            <Button className='rounded-sm p-5 bg-green-600 hover:bg-green-700' onClick={() => router.push('/register')}>Become A Vendor</Button>
         </div>
       <div className="md:hidden">
         <button className="flex justify-center items-center" onClick={toggleNavbar}>
