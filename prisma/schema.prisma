@@ -108,7 +108,7 @@ model Shop {
   updatedAt   DateTime  @default(now())
   deletedAt   DateTime  @default(now())
   users       User[]
-  products    Product[]
+  // products    Product[]
 }
 
 model Product {
@@ -116,45 +116,46 @@ model Product {
   name                      String
   slug                      String?
   description               String?
-  typeId                    Int?
+  type_id                    Int?
   price                     Float
-  salePrice                 Int
+  sale_price                 Int?
   language                  String
-  minPrice                  Float
-  maxPrice                  Float
-  sku                       Int           @unique @default(autoincrement())
+  min_price                  Float
+  max_price                  Float
+  sku                       Int           @default(autoincrement())
   quantity                  Int
-  inStock                   Boolean
-  isTaxable                 Boolean
-  shippingClassId           Int?          @unique @default(autoincrement())
+  in_stock                   Boolean
+  is_taxable                 Boolean
+  shipping_class_id           Int?         @default(autoincrement())
   status                    ProductStatus @default(PUBLISHED)
-  productType               ProductType   @default(SIMPLE)
+  product_type               ProductType   @default(SIMPLE)
   height                    Int?
   width                     Int?
-  image                     Image?
-  imageId                   Int
+  image                     Json
+  image_id                   Int?
   video                     String?
-  gallery                   Gallery?
-  galleryId                 Int
-  deletedAt                 DateTime      @default(now())
-  createdAt                 DateTime      @default(now())
-  updatedAt                 DateTime      @default(now())
-  authorId                  String?
-  manufacturerId            String
-  isDigital                 Boolean?
-  isExternal                Boolean?
-  externalProductUrl        String?
-  externalProductButtonNext String?
+  gallery                   Json[]
+  gallery_id                 Int?
+  deleted_at                 DateTime?      @default(now())
+  created_at                 DateTime      @default(now())
+  updated_at                 DateTime      @default(now())
+  author_id                  String?
+  manufacturer_id            String?
+  is_digital                 Boolean?
+  is_external                Boolean?
+  external_product_url        String?
+  external_product_button_next String?
   ratings                   Float
-  totalReviews              Int
-  ratingCount               Int?
-  myReview                  String?
-  inWishlist                Boolean?
+  total_reviews              Int
+  rating_count               Int?
+  my_review                  String?
+  in_wishlist                Boolean?
   categories                String
   // shop        Shop     @relation(fields: [shopId], references: [id])
-  shopId                    Int
-  type                      String
-  Shop                      Shop          @relation(fields: [shopId], references: [id])
+  shop_id                    Int?
+  type                      String?
+  // Shop                      Shop          @relation(fields: [shop_id], references: [id])
+  // images                    Image[]
 }
 
 model Image {
@@ -163,16 +164,19 @@ model Image {
   thumbnail String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  product   Product  @relation(fields: [productId], references: [id])
-  productId Int      @unique
+  // product   Product  @relation(fields: [productId], references: [id])
+  // productId Int      @unique
+  gallery   Gallery?  @relation(fields: [galleryId], references: [id])
+  galleryId Int      @unique
 }
 
 model Gallery {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  product   Product  @relation(fields: [productId], references: [id])
-  productId Int      @unique
+  images    Image[] 
+  // product   Product  @relation(fields: [productId], references: [id])
+  // productId Int      @unique
 }
 
 // model ProductType {
@@ -182,4 +186,64 @@ model Gallery {
 //   updatedAt DateTime @default(now())
 //   deletedAt DateTime @default(now())
 //   products  Product[]
+// }
+
+//write an image model that has two image strings, one for the original and the other for the thumbnail. This product model will have an image field that feeds from the Image model and can access both the original and thumbnail
+
+// model Image {
+//   id        Int      @id @default(autoincrement())
+//   original  String
+//   thumbnail String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+//   product   Product  @relation(fields: [productId], references: [id])
+//   productId Int      @unique
+// }
+
+// model Gallery {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+//   images    Image[]
+//   product   Product  @relation(fields: [productId], references: [id])
+//   productId Int      @unique
+// }
+
+// model Category {
+//   id        Int      @id @default(autoincrement())
+//   name      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+//   deletedAt DateTime @default(now())
+//   products  Product[]
+// }
+
+// model Shop {
+//   id          Int       @id @default(autoincrement())
+//   name        String
+//   description String
+//   address     String
+//   phone       String
+//   email       String
+//   logo        String
+//   banner      String
+//   createdAt   DateTime  @default(now())
+//   updatedAt   DateTime  @default(now())
+//   deletedAt   DateTime  @default(now())
+//   users       User[]
+//   products    Product[]
+//   categories  Category[]
+// }
+
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   email     String   @unique
+//   password  String
+//   name      String
+//   role      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+//   deletedAt DateTime @default(now())
+//   shop      Shop     @relation(fields: [shopId], references: [id])
+//   shopId    Int
 // }
