@@ -6,7 +6,7 @@ export async function GET() {
         // const productsCount = await prisma.product.count();
         // const skip = Math.floor(Math.random() * productsCount);
         const products = await prisma.product.findMany({
-            take: 12,
+            take: 8,
             // skip: skip,
             orderBy: { id: 'asc' },
         })

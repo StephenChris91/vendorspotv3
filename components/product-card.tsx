@@ -11,9 +11,21 @@ import {
 import Image from "next/image"
   import { Badge } from "@/components/ui/badge"
 import { Button } from "./ui/button"
+
+interface ProductDetails {
+    name: string,
+    price: number,
+    image: {
+        original: string
+    }
+}
+
+interface ProductCardProps {
+    productDetails: ProductDetails
+}
   
 
-export default function ProductCard({ productDetails }) {
+export default function ProductCard({ productDetails }: ProductCardProps) {
 
     const { name, price, image } = productDetails
     const { original } = image
@@ -21,7 +33,7 @@ export default function ProductCard({ productDetails }) {
         <div className="bg-white h-auto absolute flex items-start flex-col p-8">
             <Badge className="bg-green-500 relative -top-5 left-56">20%</Badge>
             <div className="w-full h-64">
-                <Image src={image.original} alt={name} height={250} width={250} objectFit="cover" className='mb-5'/>
+                <Image src={original} alt={name} height={250} width={250} objectFit="cover" className='mb-5'/>
             </div>
             <h1>{name}</h1>
             <h3>${price}000</h3>
