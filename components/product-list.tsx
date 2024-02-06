@@ -15,13 +15,17 @@ export default function ProductList() {
 
     const getProduct = async () => {
 
-      const response = await fetch(`/api/products`)
-      const prod = await response.json()
-      setProducts(prod)
+      const response = await fetch("/api/products", {
+        method: 'GET'
+      })
+      const products = await response.json()
+      console.log(products)
+      setProducts(products)
       console.log(Products)
   
   
     }
+    console.log(Products)
     getProduct()
     
     //return a function to clean up
@@ -32,9 +36,12 @@ export default function ProductList() {
 
   return (
     <div className="w-full p-5 mt-10">
-      <div className="grid grid-cols-6 gap-4">
-        {Products.map((pd, index) => (
-          <ProductCard key={index} productDetails={pd}/>
+      <div className="grid grid-cols-5 gap-4">
+        {Products?.map((product, index) => (
+          <>
+          {/* <h1 key={index}>{pd.name}</h1>   */}
+          <ProductCard productDetails={product} key={index}/>
+          </>
         ))}
     </div>
     </div>
