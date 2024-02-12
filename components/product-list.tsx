@@ -1,49 +1,53 @@
 "use client"
+import { useEffect, useState } from "react";
+import ProductCard from "./product-card";
+import { Loader } from "@/lib/loader";
+import { IProduct } from "@/app/types/types"; 
 
-import { useEffect, useState } from "react"
-import ProductCard from "./product-card"
 
 
 export default function ProductList() {
+  const [products, setProducts] = useState<IProduct[]>([]);
+  // const [loadingProducts, setLoadingProducts] = useState<boolean[]>([]);
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [Products, setProducts] = useState([])
-
-  
 
   useEffect(() => {
-    const signal = new AbortController()
+    const signal = new AbortController();
 
-    const getProduct = async () => {
+    const getProducts = async () => {
+    setIsLoading(true)
+      try {
+        const response = await fetch("/api/products", {
+          method: 'GET'
+        });
+        const data = await response.json();
+        setProducts(data);
+        // setLoadingProducts(new Array(data.length).fill(false)); // Initialize loading state for each product
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
 
-      const response = await fetch("/api/products", {
-        method: 'GET'
-      })
-      const products = await response.json()
-      console.log(products)
-      setProducts(products)
-      console.log(Products)
-  
-  
-    }
-    console.log(Products)
-    getProduct()
-    
-    //return a function to clean up
+    getProducts();
+    setIsLoading(false)
+    // Cleanup function
     return () => {
-      signal.abort()
-    }
-  }, [])
+      signal.abort();
+    };
+  }, []);
 
   return (
     <div className="w-full p-5 mt-10">
       <div className="grid grid-cols-5 gap-4">
-        {Products?.map((product, index) => (
-          <>
-          {/* <h1 key={index}>{pd.name}</h1>   */}
-          <ProductCard productDetails={product} key={index}/>
-          </>
+        {products.map((product, index) => (
+          <div key={index} className="relative">
+            {/* {loadingProducts[index] && <Loader />}
+            <ProductCard productDetails={product} /> */}
+            {isLoading ? <Loader /> : <ProductCard productDetails={product} />}
+          </div>
         ))}
+      </div>
     </div>
-    </div>
-  )
+  );
 }
