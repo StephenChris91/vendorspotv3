@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Nav from '@/components/nav'
-
+import { AuthProvider } from "@/components/authprovider"; 
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -10,16 +12,25 @@ export const metadata: Metadata = {
   description: "Buy, Sell, Anything, Anywhere",
 };
 
-export default function RootLayout({
+export const revalidate = 0;
+
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const supabase = createServerComponentClient({ cookies });
+
+  const { data: { session } } = await supabase.auth.getSession()
   return (
     <html lang="en">
       <body className={inter.className}>
         <Nav />
-        {children}
+        <AuthProvider accessToken={session?.access_token}>
+          {children}
+        </AuthProvider>
         </body>
     </html>
   );

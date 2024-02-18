@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/utils'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,12 +17,18 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  firstname: z.string().min(2, {
+    message: "First name can not be empty.",
   }),
+  lastname: z.string().min(2, { message: "Last Name can not be empty" }),
+  email: z.string().email({ message: "Password must be at least 8 characters." }),
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
+  confirmPassword: z.string().min(8, { message: "Passwords do not match" }),
+  role: z.boolean().default(false).optional(),
+  shop: z.boolean().default(false).optional(),
 })
 
 export default function Registerform() {
@@ -32,15 +39,42 @@ export default function Registerform() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      firstname: "",
+      lastname: "",
+      email: "",
       password: "",
+      confirmPassword: "",
+      role: false,
+      shop: false,
     },
-
-    
   })
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data)
+  const onSubmit = async (d: z.infer<typeof formSchema>) => {
+    // console.log(data)
+
+    const { data, error } = await supabase.auth.signUp({
+      email: d.email, 
+      password: d.password,
+      options: {
+        data: {
+          confirmPassword: d.confirmPassword,
+          firstname: d.firstname,
+          lastname: d.lastname,
+          role: d.role,
+          shop: d.shop
+        }
+      }
+    })
+
+    const { user } = data
+
+    if(user){
+      // router.push('/')
+      console.log(user)
+      console.log(data)
+    } else {
+      console.log(error)
+    }
 
     //check that user exists
     //if user exists, check that password is correct
@@ -56,20 +90,47 @@ export default function Registerform() {
     <div className="w-96 p-5 mt-32 flex flex-col m-auto items-start h-auto bg-gray-50 shadow-sm">
       <h1 className="text-3xl font-semibold mb-5">Sign Up</h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 min-w-full">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 min-w-full">
           <FormField
             control={form.control}
-            name="username"
+            name="firstname"
             render={({ field }) => (
               <>
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Username" {...field} className="w-full p-5 rounded-sm"/>
+                  <Input placeholder="First Name" {...field} className="w-full p-5 rounded-sm"/>
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
+                <FormMessage />
+              </FormItem>
+              </>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastname"
+            render={({ field }) => (
+              <>
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Last Name" {...field} className="w-full p-5 rounded-sm"/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+              </>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <>
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Email" {...field} className="w-full p-5 rounded-sm"/>
+                </FormControl>
                 <FormMessage />
               </FormItem>
               </>
@@ -90,6 +151,58 @@ export default function Registerform() {
               </>
             )}
           />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <>
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Confirm Password" {...field} className="w-full block p-5 rounded-sm"/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+              </>
+            )}
+          />
+          <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem className="flex flex-col items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+              <FormControl>
+              {/* <Label htmlFor="picture">Picture</Label> */}
+              <Input id="picture" type="file" />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+              </div>
+            </FormItem>
+          )}
+        />
+          <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md  p-4 ">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>
+                  Are you a seller?
+                </FormLabel>
+                <FormDescription>
+                  By selecting this option, you agree to become a seller on Vendorspot{" "}
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+          
           <Button type="submit" className="min-w-full bg-blue-600 rounded-sm p-5">Submit</Button>
         </form>
       </Form>
